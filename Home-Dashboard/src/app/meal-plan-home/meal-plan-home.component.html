@@ -1,17 +1,22 @@
-<div fxLayout="row wrap" fxLayoutAlign="space-between">
-	<mat-card class="example-card mat-elevation-z8" *ngFor="let dayPlan of weekPlan">
-	  <mat-card-header>
-		<mat-card-title>{{dayPlan.Day}}</mat-card-title>
-		<mat-card-subtitle>Meal Plan</mat-card-subtitle>
-	  </mat-card-header>
-	  <mat-card-content>
-		<h4>Breakfast: {{dayPlan.Breakfast}}</h4>
-		<h4>Lunch: {{dayPlan.Lunch}}</h4>
-		<h4>Dinner: {{dayPlan.Dinner}}</h4>
-	  </mat-card-content>
-	  <mat-card-actions>
-		<button mat-button>LIKE</button>
-		<button mat-button>SHARE</button>
-	  </mat-card-actions>
-	</mat-card>
+<div fxLayout="column" fxLayoutAlign="center center">
+	<div class="Meal_Plan_Title">Meal Plan</div>
+	<div fxLayout="row wrap" fxLayoutAlign="space-evenly center">
+		<mat-card id={{dayPlan.Day}} class="example-card mat-elevation-z8" *ngFor="let dayPlan of weekPlan">
+		<mat-card-header>
+			<mat-card-title class="list-style">{{dayPlan.Day}}</mat-card-title>
+			<mat-card-subtitle>Meal Plan</mat-card-subtitle>
+		</mat-card-header>
+		<mat-card-content>
+			<mat-list role="list">
+				<mat-list-item role="listitem" class="list-style">Breakfast: {{dayPlan.Breakfast}}</mat-list-item>
+				<mat-list-item role="listitem" class="list-style">Lunch: {{dayPlan.Lunch}}</mat-list-item>
+				<mat-list-item role="listitem" class="list-style">Dinner: {{dayPlan.Dinner}}</mat-list-item>
+			</mat-list>
+		</mat-card-content>
+		<mat-card-actions>
+			<button mat-button>LIKE</button>
+			<button mat-button>SHARE</button>
+		</mat-card-actions>
+		</mat-card>
+	</div>
 </div>

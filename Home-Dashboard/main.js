@@ -8,7 +8,7 @@ function createWindow () {
     width: 600, 
     height: 600,
     fullscreen: true,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#808080',
     icon: `file://${__dirname}/dist/assets/logo.png`
   })
 
