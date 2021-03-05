@@ -43,6 +43,6 @@ func main() {
 	Router := mux.NewRouter()
 	Router.HandleFunc("/add-food", env.AddFood).Methods("PUT")
 	Router.HandleFunc("/get-food", env.GetFoods).Methods("GET")
-	Router.HandleFunc("consume-food/{id}", env.ConsumeFood).Methods("POST")
+	Router.HandleFunc("/consume/{id}/", env.ConsumeFood).Methods("POST")
 	http.ListenAndServe(":"+port, Router)
 }

@@ -22,41 +22,71 @@ import (
 	"google.golang.org/api/iterator"
 	"log"
 	"net/http"
-	"time"
 	"strconv"
+	"time"
 )
 
 type Food struct {
-	id              *datastore.Key // The interger ID used in the datastore
-	Description     string         `json:"description"`
-	Expiration_Date time.Time      `json:"expiration_date"`
-	Quantity        int64          `json:"quantity"`
+	Id              *datastore.Key // The interger ID used in the datastore
+	Brand           string
+	Name            string
+	Description     string
+	Expiration_Date time.Time
+	Quantity        int64
 }
 
 type FoodJson struct {
 	Id          string `json:"id"`
+	Brand       string `json:"brand"`
+	Name        string `json:"name"`
 	Description string `json:"description"`
 	Exp_Date    string `json:"exp_date"`
 	Qty         string `json:"Qty"`
 }
 
-type FoodData struct {
-	Description     string    `json:"description"`
-	Expiration_Date time.Time `json:"expiration_date"`
-	Quantity        int64     `json:"quantity"`
+type FoodRequestBody struct {
+	Id          string
+	Brand       string
+	Name        string
+	Description string
+	Exp_Date    string
+	Qty         int64
 }
 
 func (env *Env) AddFood(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Printf("Prepare item")
-	// Sets the kind for the new entity.
 	kind := "Food"
-	taskKey := datastore.IncompleteKey(kind, nil)
+	var requestBody FoodRequestBody
+	var foodToAdd Food
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&requestBody)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(requestBody)
+
+	layout := "2006-01-02"
+	str := requestBody.Exp_Date
+	timeStr, err := time.Parse(layout , str)
+	if err != nil {
+		panic(err)
+	}
+
+	foodToAdd.Brand = requestBody.Brand
+	foodToAdd.Name = requestBody.Name
+	foodToAdd.Description = requestBody.Description
+	foodToAdd.Expiration_Date = timeStr
+	foodToAdd.Quantity = requestBody.Qty
+	
+	fmt.Printf("Prepare item")
+	foodKey := datastore.NameKey(kind, requestBody.Id, nil)
 	// Saves the new entity.
-	key, err := env.client.Put(env.ctx, taskKey, &Food{
-		Expiration_Date: time.Date(2020, time.February, 20, 0, 0, 0, 0, time.UTC),
-		Description:     "yogurt",
-		Quantity:        4,
+	key, err := env.client.Put(env.ctx, foodKey, &Food{
+		Id: 			 foodKey,
+		Brand:			 foodToAdd.Brand,
+		Name:            foodToAdd.Name,
+		Description:     foodToAdd.Description,
+		Expiration_Date: foodToAdd.Expiration_Date,
+		Quantity: 		 foodToAdd.Quantity,
 	})
 	if err != nil {
 		log.Printf("Failed to create task: %v", err)
@@ -80,6 +110,8 @@ func (env *Env) GetFoods(w http.ResponseWriter, r *http.Request) {
 			// Handle error.
 		}
 		tempFood.Id = key.String()
+		tempFood.Brand = food.Brand
+		tempFood.Name = food.Name
 		tempFood.Description = food.Description
 		tempFood.Exp_Date = food.Expiration_Date.String()
 		tempFood.Qty = strconv.FormatInt(food.Quantity, 16)
@@ -90,10 +122,12 @@ func (env *Env) GetFoods(w http.ResponseWriter, r *http.Request) {
 }
 
 func (env *Env) ConsumeFood(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Consumming Foods")
 	params := mux.Vars(r)
 	kind := "Food"
 	fmt.Println(params["id"])
 	key := datastore.NameKey(kind, params["id"], nil)
+	fmt.Println(key.String())
 	err := env.client.Delete(env.ctx, key)
 
 	if err != nil {
@@ -103,4 +137,3 @@ func (env *Env) ConsumeFood(w http.ResponseWriter, r *http.Request) {
 	}
 	return
 }
-
