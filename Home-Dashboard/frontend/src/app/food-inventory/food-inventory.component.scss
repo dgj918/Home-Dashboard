@@ -1,0 +1,40 @@
+.food-inv-container{
+    display: grid;
+    grid-template-columns: 25vw 25vw 25vw 25vw;
+    grid-template-rows: 10vh 45vh 45vh;
+    grid-template-areas: 
+        "disw disf free frig"
+        "fexp fexp fbuy fbuy"
+        "invt invt invt invt";
+    justify-items: center;
+    align-items: center;
+
+    >.dis-water{
+        grid-area: disw;
+        background-color: honeydew;
+    }
+    >.dis-food{
+        grid-area: disf;
+        background-color: palegoldenrod;
+    }
+    >.freezer-cap{
+        grid-area: free;
+        background-color: yellowgreen;
+    }
+    >.fridge-cap{
+        grid-area: frig;
+        background-color: lavender;
+    }
+    >.food-exp{
+        grid-area: fexp;
+        background-color: saddlebrown;
+    }
+    >.need-to-buy{
+        grid-area: fbuy;
+        background-color: firebrick;
+    }
+    >.inventory-table{
+        grid-area: invt;
+        background-color: aqua;
+    }
+}
